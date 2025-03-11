@@ -1,0 +1,208 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -100
+      ],
+      "id": "36ee1ab4-96e9-45cb-b2b3-a347f8e70ac8",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "url": "http://xmlcalendar.ru/data/ru/2022/calendar.json",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -380,
+        -220
+      ],
+      "id": "a989bcc4-3130-4272-bb32-703604bd4958",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "http://xmlcalendar.ru/data/ru/2022/calendar.csv",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -400,
+        40
+      ],
+      "id": "a5239c4c-17b4-41a3-a567-18c5e5beff97",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -220
+      ],
+      "id": "a2500f86-340c-4662-8c69-c7adddbd18f1",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        40
+      ],
+      "id": "c451f9ba-d85e-4496-bbf3-6c4309577e97",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "areEqual",
+              "value": "={{JSON.stringify($json[\"Parse CSV\"][0]) === JSON.stringify($json[\"Set JSON\"][0]) ? \"true\" : \"false\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        120,
+        -80
+      ],
+      "id": "9601e0bb-633d-4b36-8d80-0b2c1cfe6328"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"areEqual\"]}}",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        340,
+        -80
+      ],
+      "id": "bdcda2e4-3ea7-48d6-a90e-74063a5c1f07"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "972cac64-e82d-44b5-8981-1357c97a4a8c",
+  "meta": {
+    "instanceId": "183037807a330a1718bf5540c1cf3bf214a65e105e9c6947acb1518b0b34b191"
+  },
+  "id": "Onsx03oSt9zDsRr7",
+  "tags": []
+}
